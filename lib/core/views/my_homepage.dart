@@ -44,6 +44,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  /// Check if device should use landscape layout (landscape orientation OR tablet size)
+  bool _isTabletOrLandscape(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final Orientation orientation = MediaQuery.of(context).orientation;
+
+    // Use landscape layout if:
+    // 1. Device is in landscape orientation, OR
+    // 2. Device has tablet-sized screen (width > 600px)
+    return orientation == Orientation.landscape || screenSize.width > 600;
+  }
+
   /// Build button layout for landscape orientation (all buttons in one row)
   Widget _buildLandscapeButtonLayout() {
     return Padding(
@@ -191,10 +202,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
           const SizedBox(height: 32), // Add some spacing between inputs and buttons
 
-          // Responsive button layout based on orientation
-          MediaQuery.of(context).orientation == Orientation.landscape
-              ? _buildLandscapeButtonLayout()  // All buttons in one row for landscape
-              : _buildPortraitButtonLayout(),  // Current two-row layout for portrait
+          // Responsive button layout based on orientation and screen size
+          _isTabletOrLandscape(context)
+              ? _buildLandscapeButtonLayout()  // All buttons in one row for landscape/tablet
+              : _buildPortraitButtonLayout(),  // Current two-row layout for portrait phones
         ],
       ),
       ),
