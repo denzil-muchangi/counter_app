@@ -50,6 +50,9 @@ class CustomButton extends StatelessWidget {
             ? _getDefaultForegroundColor(colorScheme)
             : colorScheme.onSurfaceVariant.withValues(alpha: 0.7));
 
+    // Get hover color based on button type
+    final hoverBackgroundColor = _getHoverBackgroundColor(colorScheme);
+
     return FilledButton.icon(
       onPressed: isEnabled ? onPressed : null,
       icon: Icon(icon, size: 20),
@@ -72,6 +75,16 @@ class CustomButton extends StatelessWidget {
         ),
         elevation: isEnabled ? 2 : 0,
         shadowColor: effectiveBackgroundColor.withValues(alpha: 0.3),
+      ).copyWith(
+        // Add hover effect
+        overlayColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.hovered) && isEnabled) {
+              return hoverBackgroundColor;
+            }
+            return null; // Use default overlay for other states
+          },
+        ),
       ),
     );
   }
@@ -99,6 +112,19 @@ class CustomButton extends StatelessWidget {
         return colorScheme.onPrimary;
       case ButtonType.primary:
         return colorScheme.onPrimary;
+    }
+  }
+
+  Color _getHoverBackgroundColor(ColorScheme colorScheme) {
+    switch (buttonType) {
+      case ButtonType.decrement:
+        return const Color(0xFF4B5563); // Dark gray hover for decrement
+      case ButtonType.reset:
+        return const Color(0xFFDC2626); // Darker red hover for reset
+      case ButtonType.increment:
+        return const Color(0xFF374151); // Darker gray hover for increment
+      case ButtonType.primary:
+        return const Color(0xFF374151); // Darker gray hover for primary
     }
   }
 }
