@@ -1,4 +1,4 @@
-import 'package:counter_app/core/my_homepage.dart';
+import 'package:counter_app/core/views/my_homepage.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {

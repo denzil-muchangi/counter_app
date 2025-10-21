@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:counter_app/core/custom_button.dart';
+import 'package:counter_app/core/widgets/custom_button.dart';
 import 'package:counter_app/core/functions/counter_functions.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -42,6 +42,84 @@ class _MyHomePageState extends State<MyHomePage> {
       _incrementController.text = '1';
       _decrementController.text = '1';
     });
+  }
+
+  /// Build button layout for landscape orientation (all buttons in one row)
+  Widget _buildLandscapeButtonLayout() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CustomButton(
+            onPressed: _decrementCounter,
+            icon: Icons.remove,
+            label: 'Decrement',
+            buttonType: ButtonType.decrement,
+          ),
+          const SizedBox(width: 12), // More space before reset button
+          CustomButton(
+            onPressed: _resetCounter,
+            icon: Icons.refresh,
+            label: 'Reset',
+            buttonType: ButtonType.reset,
+          ),
+          const SizedBox(width: 12), // Tighter spacing for landscape
+          CustomButton(
+            onPressed: _incrementCounter,
+            icon: Icons.add,
+            label: 'Increment',
+            buttonType: ButtonType.increment,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build button layout for portrait orientation (current two-row layout)
+  Widget _buildPortraitButtonLayout() {
+    return Column(
+      children: <Widget>[
+        // First row: Decrement and Increment buttons side by side
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CustomButton(
+                onPressed: _decrementCounter,
+                icon: Icons.remove,
+                label: 'Decrement',
+                buttonType: ButtonType.decrement,
+              ),
+              const SizedBox(width: 16), // Add spacing between buttons
+              CustomButton(
+                onPressed: _incrementCounter,
+                icon: Icons.add,
+                label: 'Increment',
+                buttonType: ButtonType.increment,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20), // Add spacing between rows
+        // Second row: Reset button centered below
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CustomButton(
+                onPressed: _resetCounter,
+                icon: Icons.refresh,
+                label: 'Reset',
+                buttonType: ButtonType.reset,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -112,44 +190,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
 
           const SizedBox(height: 32), // Add some spacing between inputs and buttons
-          // First row: Decrement and Increment buttons side by side
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CustomButton(
-                  onPressed: _decrementCounter,
-                  icon: Icons.remove,
-                  label: 'Decrement',
-                  buttonType: ButtonType.decrement,
-                ),
-                const SizedBox(width: 16), // Add spacing between buttons
-                CustomButton(
-                  onPressed: _incrementCounter,
-                  icon: Icons.add,
-                  label: 'Increment',
-                  buttonType: ButtonType.increment,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20), // Add spacing between rows
-          // Second row: Reset button centered below
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CustomButton(
-                  onPressed: _resetCounter,
-                  icon: Icons.refresh,
-                  label: 'Reset',
-                  buttonType: ButtonType.reset,
-                ),
-              ],
-            ),
-          ),
+
+          // Responsive button layout based on orientation
+          MediaQuery.of(context).orientation == Orientation.landscape
+              ? _buildLandscapeButtonLayout()  // All buttons in one row for landscape
+              : _buildPortraitButtonLayout(),  // Current two-row layout for portrait
         ],
       ),
       ),
